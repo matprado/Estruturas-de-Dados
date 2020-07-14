@@ -1,15 +1,17 @@
 #include "avl.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 struct no{
 	ITEM *item;
-	struct NO *fesq;
-	struct NO *fdir;
+	NO *fesq;
+	NO *fdir;
 	int altura;
 };
 
 struct avl{
 	NO *raiz;
-	int profundiade;
+	int profundidade;
 };
 
 
@@ -24,8 +26,8 @@ AVL *avl_criar(void){
 
 void avl_apagar_aux(NO *raiz){
 	if(raiz != NULL){
-		apagar_avl_aux(raiz->fesq);
-		apagar_avl_aux(raiz->fdir);
+		avl_apagar_aux(raiz->fesq);
+		avl_apagar_aux(raiz->fdir);
 		apagar_item(&(raiz->item));
 		free(raiz);
 	}
@@ -79,7 +81,7 @@ NO *rodar_esquerda_direita(NO *a){
 	return rodar_direita(a);
 }
 
-NO *rodar_esquerda_direita(NO *a){
+NO *rodar_direita_esquerda(NO *a){
 	a->dir = rodar_direita(a->dir);
 	return rodar_esquerda(a);
 }
@@ -168,14 +170,13 @@ int avl_remover(NO *raiz, NO *rem, NO *ant, int chave){
 }
 
 void troca_max_esq(NO *troca, NO *rem, NO *ant){
-	if(troca->dir != NULL){
-		return troca_max_esq(troca->dir, rem, troca);
+	if(troca->fdir != NULL){
+		return troca_max_esq(troca->fdir, rem, troca);
 	}
 	if(rem == ant)
-		ant->esq = troca->esq;
+		ant->fesq = troca->fesq;
 	else
-		ant->dir = troca->esq;
+		ant->fdir = troca->fesq;
 	rem->item = troca->item;
 	free(troca);
-	troca = NULL;
 }
